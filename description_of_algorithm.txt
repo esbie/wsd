@@ -1,0 +1,28 @@
+== The algorithm ==
+
+This algorithm uses the Naive Bayes machine learning algorithm to formulate a set of probabilities to determine the sense of a word. We are trying to find the sense s that maximizes:
+P(s | C)
+where s is a sense for the word and C is the context of the word. Of course, by Bayes' rule,
+P(s | C) = P(C | s) * P(s) / P(C)
+but P(C) is constant over all senses, since it does not depend on the sense, so to maximize we can disregard this term; all we care about are the relative amounts. For the same reason, we can take the log of the equation, which gives:
+log(P(C | s)) + log(P(s))
+Since P(C | s) can be represented by (assuming the naive Bayes assumption of independence):
+Π(c in C)P(c | s)
+where C, the context, is composed of all the words in the context. So we have:
+log(Π(c in C)P(c | s)) + log(P(s)) = ∑(c in C)log(P(c | s)) + log(P(s))
+We calculate:
+P(c | s) = (1 + (# times c appears in C))/((# of words associated with sense s in training set) + (# of words in the vocabulary for this word))
+P(s) = (# times sense s occurs for the word in the training set)/(# times word occurs in the training set as a head word)
+The +1 in P(c | s) is to ensure we have no 0 probabilities.
+For a simple example of doing Naive Bayes by hand, see: http://www.ims.uni-stuttgart.de/lehre/teaching/2007-SS/stats/wsdex.pdf
+
+The output of learning will be a set of:
+P(s) = the "prior" probability of sense s for a given word
+P(c | s) = the probability of seeing a particular word in the context given that the sense is s
+
+To evaluate a new context for sense s*, evaluate:
+s* = argmax(s in set of senses for word) ∑(c in C)log(P(c | s)) + log(P(s))
+
+== Why this approach ==
+
+blah blah blah
