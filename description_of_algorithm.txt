@@ -25,4 +25,6 @@ s* = argmax(s in set of senses for word) ∑(c in C)log(P(c | s)) + log(P(s))
 
 == Why this approach ==
 
-blah blah blah
+There are several reasons this approach was chosen for our initial algorithm.  Easily implemented, Naive Bayes allows us to get a system up and running quickly, which can then be supplemented with other Machine Learning algorithms if necessary. Additionally, the WSD system that was most accurate in the Senseval-3 English Lexical Sample Task was based on Naive Bayes.
+
+Because Naive Bayes relies exclusively on the probability of features found in the training corpus, Naive Bayes may perform poorly when testing on different corpora.  However, for this project we know both training and testing data will be taken from the same corpus, and so this is less of a consideration.
