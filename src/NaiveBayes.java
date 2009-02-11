@@ -7,16 +7,16 @@ public class NaiveBayes
 {
     public ArrayList<Instance> instances;
     // hash { feature => hash { sense# => count } } = count for feature f for each sense
-    public HashMap<Feature, HashMap<Integer, Integer>> countForFeatureForSense;
+    public HashMap<Feature, HashMap<String, Integer>> countForFeatureForSense;
     // hash { head word => hash { sense# => count } } = count for # of times a sense occurs for a head word
-    public HashMap<String, HashMap<Integer, Integer>> countForSenseForHeadWord;
+    public HashMap<String, HashMap<String, Integer>> countForSenseForHeadWord;
     // hash { head word => count } = count for # of times a head word occurs
     public HashMap<String, Integer> countForHeadWord;
     
     public NaiveBayes(ArrayList<Instance> instances)
     {
-        countForFeatureForSense = new HashMap<Feature, HashMap<Integer, Integer>>();
-        countForSenseForHeadWord = new HashMap<String, HashMap<Integer, Integer>>();
+        countForFeatureForSense = new HashMap<Feature, HashMap<String, Integer>>();
+        countForSenseForHeadWord = new HashMap<String, HashMap<String, Integer>>();
         countForHeadWord = new HashMap<String, Integer>();
         this.instances = instances;
     }
@@ -30,7 +30,7 @@ public class NaiveBayes
                     Feature feature = new Feature(instance.collocation[i], i-2);
                     if (countForFeatureForSense.containsKey(feature)) {
                         HashMap<Integer, Integer> countForSense = countForFeatureForSense.get(feature);
-                        for (int senseid : instance.senseids) {
+                        for (String senseid : instance.senseids) {
                             if (countForSense.containsKey(senseid)) {
                                 countForSense.put(senseid, countForSense.get(senseid)+1);
                             } else {
@@ -39,7 +39,7 @@ public class NaiveBayes
                         }
                     } else {
                         HashMap<Integer, Integer> countForSense = new HashMap<Integer, Integer>();
-                        for (int senseid : instance.senseids) {
+                        for (String senseid : instance.senseids) {
                             countForSense.put(senseid, 1);
                         }
                         countForFeatureForSense.put(feature, countForSense);
@@ -52,7 +52,7 @@ public class NaiveBayes
                 countForSenseForHeadWord.put(instance.target, new HashMap<Integer, Integer>());
             }
             HashMap<Integer, Integer> countForSense = countForSenseForHeadWord.get(instance.target);
-            for (int senseid : instance.senseids) {
+            for (String senseid : instance.senseids) {
                 if (countForSense.containsKey(senseid)) {
                     countForSense.put(senseid, countForSense.get(senseid)+1);
                 } else {
