@@ -24,6 +24,7 @@ public class NaiveBayes
     public void train()
     {
         for (Instance instance : instances) {
+            // Update countForFeatureForSense
             for (int i = 0; i < 4; i++) {
                 if (!instance.collocation[i].equals("")) {
                     Feature feature = new Feature(instance.collocation[i], i-2);
@@ -44,6 +45,26 @@ public class NaiveBayes
                         countForFeatureForSense.put(feature, countForSense);
                     }
                 }
+            }
+            
+            // Update countForSenseForHeadWord
+            if (!countForSenseForHeadWord.containsKey(instance.target)) {
+                countForSenseForHeadWord.put(instance.target, new HashMap<Integer, Integer>());
+            }
+            HashMap<Integer, Integer> countForSense = countForSenseForHeadWord.get(instance.target);
+            for (int senseid : instance.senseids) {
+                if (countForSense.containsKey(senseid)) {
+                    countForSense.put(senseid, countForSense.get(senseid)+1);
+                } else {
+                    countForSense.put(senseid, 1);
+                }
+            }
+            
+            // Update countForHeadWord
+            if (countForHeadWord.containsKey(instance.target)) {
+                countForHeadWord.put(instance.target, countForHeadWord.get(instance.target)+instance.senseids.length);
+            } else {
+                countForHeadWord.put(instance.target, instance.senseids.length);
             }
         }
     }
