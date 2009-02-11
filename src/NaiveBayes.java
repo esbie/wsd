@@ -5,47 +5,46 @@ import org.w3c.dom.Element;
 
 public class NaiveBayes
 {
+    public ArrayList<Instance> instances;
     // hash { feature => hash { sense# => count } } = count for feature f for each sense
-    private HashMap<Feature, HashMap<Integer, Integer>> countForFeatureForSense;
+    public HashMap<Feature, HashMap<Integer, Integer>> countForFeatureForSense;
     // hash { head word => hash { sense# => count } } = count for # of times a sense occurs for a head word
-    private HashMap<String, HashMap<Integer, Integer>> countForSenseForHeadWord;
+    public HashMap<String, HashMap<Integer, Integer>> countForSenseForHeadWord;
     // hash { head word => count } = count for # of times a head word occurs
-    private HashMap<String, Integer> countForHeadWord;
+    public HashMap<String, Integer> countForHeadWord;
     
-    public NaiveBayes(ArrayList<Instance>)
+    public NaiveBayes(ArrayList<Instance> instances)
     {
-        countForContextWordForSense = new HashMap<String, HashMap<Integer, Integer>>();
-        numberOfContextWordsForSense = new HashMap<Integer, Integer>();
-        numberOfContextWordsForHeadWord = new HashMap<String, Integer>();
+        countForFeatureForSense = new HashMap<Feature, HashMap<Integer, Integer>>();
         countForSenseForHeadWord = new HashMap<String, HashMap<Integer, Integer>>();
         countForHeadWord = new HashMap<String, Integer>();
+        this.instances = instances;
     }
     
-    
-}
-
-class Feature
-{
-    public String word;
-    public Integer offset;
-    
-    public Feature(String w, Integer o)
+    public void train()
     {
-        word = w;
-        offset = o;
-    }
-    
-    public boolean equals(Object f)
-    {
-        if (f instanceof Feature) {
-            return (word.equals(f.word) && offset.equals(f.offset));
+        for (Instance instance : instances) {
+            for (int i = 0; i < 4; i++) {
+                if (!instance.collocation[i].equals("")) {
+                    Feature feature = new Feature(instance.collocation[i], i-2);
+                    if (countForFeatureForSense.containsKey(feature)) {
+                        HashMap<Integer, Integer> countForSense = countForFeatureForSense.get(feature);
+                        for (int senseid : instance.senseids) {
+                            if (countForSense.containsKey(senseid)) {
+                                countForSense.put(senseid, countForSense.get(senseid)+1);
+                            } else {
+                                countForSense.put(senseid, 1);
+                            }
+                        }
+                    } else {
+                        HashMap<Integer, Integer> countForSense = new HashMap<Integer, Integer>();
+                        for (int senseid : instance.senseids) {
+                            countForSense.put(senseid, 1);
+                        }
+                        countForFeatureForSense.put(feature, countForSense);
+                    }
+                }
+            }
         }
-        return false;
-    }
-    
-    // Equal objects must return equal hashCodes.
-    public int hashCode()
-    {
-        return word.hashCode() + offset.hashCode();
     }
 }
