@@ -14,7 +14,6 @@ public class NaiveBayes
     
     public NaiveBayes(ArrayList<Instance>)
     {
-        trainingDoc = doc;
         countForContextWordForSense = new HashMap<String, HashMap<Integer, Integer>>();
         numberOfContextWordsForSense = new HashMap<Integer, Integer>();
         numberOfContextWordsForHeadWord = new HashMap<String, Integer>();
