@@ -11,7 +11,7 @@ Since P(C | s) can be represented by (assuming the naive Bayes assumption of ind
 where C, the context, is composed of all the words in the context. So we have:
 log(Π(c in C)P(c | s)) + log(P(s)) = ∑(c in C)log(P(c | s)) + log(P(s))
 We calculate:
-P(c | s) = (1 + (# times c appears in C))/((# of words associated with sense s in training set) + (# of words in the vocabulary for this word))
+P(c | s) = (1 + (# times c appears in C))/(# of times sense s occurs for the word in the training set)
 P(s) = (# times sense s occurs for the word in the training set)/(# times word occurs in the training set as a head word)
 The +1 in P(c | s) is to ensure we have no 0 probabilities.
 For a simple example of doing Naive Bayes by hand using only co-occurrence, see:
@@ -25,9 +25,8 @@ Train:
 	Read in the training data, fetch sense definitions & read in context for each word
 	maintain count of:
 		number of words c in each context C
-		number of different words c that appear in contexts for head word
-		number of different words c that appear in contexts for a particular head word sense
-		number of times a sense occurs for a head word, number of times a head word occurs in the training set
+		number of times a sense occurs for a head word
+		number of times a head word occurs in the training set
 	register probabilities P(c | s) and P(s) for each sense s and each context word for a given sense s
 		use the counts recorded above
 Test:
