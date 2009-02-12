@@ -24,4 +24,9 @@ class Feature
     {
         return word.hashCode() + offset.hashCode();
     }
+    
+    public String toString()
+    {
+        return word + "_" + offset.toString();
+    }
 }
