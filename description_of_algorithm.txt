@@ -4,34 +4,37 @@ This algorithm uses the Naive Bayes machine learning algorithm to formulate a se
 P(s | C)
 where s is a sense for the word and C is the context of the word. Of course, by Bayes' rule,
 P(s | C) = P(C | s) * P(s) / P(C)
-but P(C) is constant over all senses, since it does not depend on the sense, so to maximize we can disregard this term; all we care about are the relative amounts. For the same reason, we can take the log of the equation, which gives:
-log(P(C | s)) + log(P(s))
+but P(C) is constant over all senses, since it does not depend on the sense, so to maximize we can disregard this term; all we care about are the relative amounts.
+P(C | s) * P(s)
 Since P(C | s) can be represented by (assuming the naive Bayes assumption of independence):
-Π(c in C)P(c | s)
-where C, the context, is composed of all the words in the context. So we have:
-log(Π(c in C)P(c | s)) + log(P(s)) = ∑(c in C)log(P(c | s)) + log(P(s))
+Π(f in C)P(f | s)
+where C, the context, is composed of all the features in the context. So we have:
+Π(f in C)P(f | s) * P(s)
 We calculate:
-P(c | s) = (1 + (# times c appears in C))/(# of times sense s occurs for the word in the training set)
-P(s) = (# times sense s occurs for the word in the training set)/(# times word occurs in the training set as a head word)
-The +1 in P(c | s) is to ensure we have no 0 probabilities.
-For a simple example of doing Naive Bayes by hand using only co-occurrence, see:
-http://www.ims.uni-stuttgart.de/lehre/teaching/2007-SS/stats/wsdex.pdf
+P(s) = C(s) / N
+P(f | s) = C(f, s) / C(s)
+where:
+C(s) is the number of occurrences of sense s in the training data
+C(f, s) is the number of occurrences of feature f in the context of sense s in the training data
+N is the total number of occurrences of the head word w
+In testing, to ensure there are no 0 probabilities, we assume that P(f | s) for a previously unseen feature is 1 / N.
 
 The output of learning will be a set of:
 P(s) = the "prior" probability of sense s for a given word
 P(c | s) = the probability of seeing a particular word in the context given that the sense is s
 
 Train:
-	Read in the training data, fetch sense definitions & read in context for each word
+	Read in the training data & read in context for each word as instances
 	maintain count of:
-		number of words c in each context C
-		number of times a sense occurs for a head word
-		number of times a head word occurs in the training set
+		C(f, s) : number of occurrences of feature f in the context of sense s
+		C(s) : number of occurrences of sense s
+		N : total number of occurrences of a head word
 	register probabilities P(c | s) and P(s) for each sense s and each context word for a given sense s
 		use the counts recorded above
 Test:
-	for each context C and head word w, evaluate the equation:
-		s* = argmax(s in set of senses for w) ∑(c in C)log(P(c | s)) + log(P(s))
+	read in the test data & read in context for each word as instances
+	for each instance, evaluate the equation:
+		s* = argmax(s in set of senses for w) Π(f in C)P(f | s) * P(s)
 		output the sense s*
 
 == Why this approach ==
@@ -42,4 +45,4 @@ Because Naive Bayes relies exclusively on the probability of features found in t
 
 == Design choices ==
 
-A context C will consist of co-occurrence features of words, but possibly also extra information, such as part-of-speech tags or collocation information. Context consisting of only co-occurrence information is not optimal, but it may be good enough to achieve acceptable disambiguation results.
+A context C will consist of collocation features of words, for simplicity. Context consisting of only collocation information is not optimal, but it may be good enough to achieve acceptable disambiguation results.
