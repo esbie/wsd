@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public class NaiveBayes
 {
@@ -120,7 +118,7 @@ public class NaiveBayes
             if (probFeatureGivenSense.get(feature).containsKey(sense)) {
                 return probFeatureGivenSense.get(feature).get(sense);
             } else {
-                return 0.0;
+                return defaultProbGivenSense.get(sense);
             }
         } else {
             return defaultProbGivenSense.get(sense);
