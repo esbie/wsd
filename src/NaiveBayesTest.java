@@ -34,8 +34,8 @@ public class NaiveBayesTest
         System.out.println("Sense fish for bass " + (nb.senseOccurredInTraining("bass", "fish")?"occurred.":"did not occur."));
         System.out.println("Sense foobar for bass " + (nb.senseOccurredInTraining("bass", "foobar")?"occurred.":"did not occur."));
         
-        instances.add(new Instance("bass", strings("??"), strings("freshwater", "sea", "player", ""), "bass.n", "bass.n.42"));
-        instances.add(new Instance("bass", strings("???"), strings("never", "seen", "before", ""), "bass.n", "bass.n.43"));
+        instances.add(new Instance("bass", strings("??"), strings("freshwater", "sea", "player", ""), "bass.n", "bass.n.42", null));
+        instances.add(new Instance("bass", strings("???"), strings("never", "seen", "before", ""), "bass.n", "bass.n.43", null));
         NaiveBayesTester nbt = new NaiveBayesTester(instances, nb);
         nbt.test();
     }

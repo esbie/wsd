@@ -69,17 +69,17 @@ public class NaiveBayes
             }
             
             // Update countForHeadWord
-            if (countForHeadWord.containsKey(instance.target)) {
-                countForHeadWord.put(instance.target, countForHeadWord.get(instance.target)+instance.senseids.length);
+            if (countForHeadWord.containsKey(instance.headword())) {
+                countForHeadWord.put(instance.headword(), countForHeadWord.get(instance.headword())+instance.senseids.length);
             } else {
-                countForHeadWord.put(instance.target, instance.senseids.length);
+                countForHeadWord.put(instance.headword(), instance.senseids.length);
             }
             
             // Update headwordSenseMap
-            if (!headwordSenseMap.containsKey(instance.target)) {
-                headwordSenseMap.put(instance.target, new ArrayList<String>());
+            if (!headwordSenseMap.containsKey(instance.headword())) {
+                headwordSenseMap.put(instance.headword(), new ArrayList<String>());
             }
-            ArrayList<String> senses = headwordSenseMap.get(instance.target);
+            ArrayList<String> senses = headwordSenseMap.get(instance.headword());
             for (String senseid : instance.senseids) {
                 if (!senses.contains(senseid)) {
                     senses.add(senseid);

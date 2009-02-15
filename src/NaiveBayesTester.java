@@ -17,7 +17,7 @@ public class NaiveBayesTester
             String senseAnswer = "";
             Double bestProb = 0.0;
             
-            for (String sense : trainer.headwordSenseMap.get(instance.target)) {
+            for (String sense : trainer.headwordSenseMap.get(instance.headword())) {
                 Double curProb = 1.0;
                 curProb *= trainer.probability(sense);
                 for (int i = 0; i < 4; i++) {

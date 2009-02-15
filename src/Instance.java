@@ -25,4 +25,8 @@ public class Instance {
 	    this.instance_id = instance_id;
 	    this.cooccurs = cooccurs;
 	}
+	
+	public String headword(){
+	    return lexelt.substring(0, lexelt.length()-2);
+	}
 }
