@@ -1,5 +1,5 @@
 
-import java.util.ArrayList;
+import java.util.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
@@ -7,6 +7,7 @@ public class WSDParser {
 	
 	public Element rootElement;
 	public ArrayList<Instance> examples = new ArrayList<Instance>();
+	public HashSet<String> cooccurs = new HashSet<String>();
 
 	public WSDParser(String filename){
 		//initializing the xml parser
@@ -26,7 +27,7 @@ public class WSDParser {
 	 * @param target should be an all lower case String, POS (".n") omitted
 	 * @return
 	 */
-	public ArrayList<Instance> parseTarget(String target){
+	public ArrayList<Instance> parse(String target){
 		//here we assume that we are parsing only nouns
 		//and that there is only 1 lexelt per target
 		NodeList lexelts = rootElement.getElementsByTagName("lexelt");
@@ -44,9 +45,9 @@ public class WSDParser {
 	 * @param targets
 	 * @return
 	 */
-	public ArrayList<Instance> parseTargets(String[] targets){
+	public ArrayList<Instance> parse(String[] targets){
 		for(int i=0; i<targets.length; i++){
-			parseTarget(targets[i]);
+			parse(targets[i]);
 		}
 		return examples;
 	}
@@ -61,7 +62,19 @@ public class WSDParser {
 	
 	private Instance parseInstance(String target, Element instance){
 		Element context = (Element) instance.getElementsByTagName("context").item(0);
-		return new Instance(target, parseAnswers(instance), parseCollocation(context));
+		String id = instance.getAttribute("id");
+		return new Instance(
+				parseTarget(context), 
+				parseAnswers(instance), 
+				parseCollocation(context),
+				target+".n",
+				id,
+				parseCooccurence(context));
+	}
+	
+	private String parseTarget(Element context){
+		Element head = (Element) context.getChildNodes().item(1);
+		return head.getTextContent();
 	}
 	
 	private String[] parseAnswers(Element instance){
@@ -74,13 +87,19 @@ public class WSDParser {
 		return senseids;
 	}
 	
+	private HashSet<String> parseCooccurence(Element context){
+		HashSet<String> inContext = new HashSet<String>(); 
+		String[] pre = parseTextNode(context.getFirstChild());
+		String[] post = parseTextNode(context.getLastChild());
+		inContext.addAll(Arrays.asList(pre));
+		inContext.addAll(Arrays.asList(post));
+		cooccurs.addAll(inContext);		
+		return inContext;
+	}
+	
 	private String[] parseCollocation(Element context){
-		String preContext = context.getFirstChild().getNodeValue();
-		String postContext = context.getLastChild().getNodeValue();
-		preContext = preContext.trim().toLowerCase();
-		postContext = postContext.trim().toLowerCase();
-		String[] pre = preContext.split("\\s");
-		String[] post = postContext.split("\\s");
+		String[] pre = parseTextNode(context.getFirstChild());
+		String[] post = parseTextNode(context.getLastChild());
 		//getting rid of non alphanumeric characters
 		int second = pre.length-1, third = 0;
 		while(!pre[second].matches("\\p{Alnum}+")){
@@ -88,7 +107,7 @@ public class WSDParser {
 		}
 		int first = second - 1;
 		while(!pre[first].matches("\\p{Alnum}+")){
-			first++;
+			first--;
 		}
 		while(!post[third].matches("\\p{Alnum}+")){
 			third++;
@@ -102,5 +121,14 @@ public class WSDParser {
 				post[third],
 				post[fourth]};
 		return collocation;
+	}
+	
+	/*TODO: this should also get rid of non alphanumeric words*/
+	public String[] parseTextNode(Node node){
+		String text = node.getNodeValue();
+		text = text.replaceAll("\\p{Punct}+", "");
+		text = text.trim().toLowerCase();
+		String[] textArray = text.split("\\s");
+		return textArray;
 	}
 }
