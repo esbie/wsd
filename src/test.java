@@ -10,7 +10,7 @@ public class test {
 		Instance i = x.get(4);
 		System.out.println("|" + i.collocation[0] + "|" + i.collocation[1] + 
 				"|" + i.target + "|" + i.collocation[2] + "|" + i.collocation[3] + "|");
-		System.out.println(i.cooccurs.toString());
-		System.out.println(parser.cooccurs.toString());
+		//System.out.println(i.cooccurs.toString());
+		//System.out.println(parser.cooccurs.toString());
 	}
 }

@@ -7,7 +7,7 @@ public class WSDParser {
 	
 	public Element rootElement;
 	public ArrayList<Instance> examples = new ArrayList<Instance>();
-	public HashSet<String> cooccurs = new HashSet<String>();
+	public HashSet<String> cooccurs;
 
 	public WSDParser(String filename){
 		//initializing the xml parser
@@ -53,6 +53,8 @@ public class WSDParser {
 	}
 	
 	private void parseLexelt(String target, Element lexelt){
+		//TODO cooccurence vectors
+		cooccurs = new HashSet<String>();
 		NodeList instances = lexelt.getElementsByTagName("instance");
 		for(int i=0; i<instances.getLength(); i++){
 			Element instance = (Element) instances.item(i);
@@ -68,8 +70,7 @@ public class WSDParser {
 				parseAnswers(instance), 
 				parseCollocation(context),
 				target+".n",
-				id,
-				parseCooccurence(context));
+				id);
 	}
 	
 	private String parseTarget(Element context){

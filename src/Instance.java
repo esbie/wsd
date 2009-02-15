@@ -7,7 +7,7 @@ public class Instance {
 	public String[] collocation;
 	public String lexelt;
 	public String instance_id;
-	public HashSet<String> cooccurs;
+	public int[] cooccurs;
 
 	public Instance(String target, String[] senseids, String[] collocation){
 		this.target = target;
@@ -17,12 +17,11 @@ public class Instance {
 		this.instance_id = "";
 	}
 	
-	public Instance(String target, String[] senseids, String[] collocation, String lexelt, String instance_id, HashSet<String> cooccurs){
+	public Instance(String target, String[] senseids, String[] collocation, String lexelt, String instance_id){
 	    this.target = target;
 	    this.senseids = senseids;
 	    this.collocation = collocation;
 	    this.lexelt = lexelt;
 	    this.instance_id = instance_id;
-	    this.cooccurs = cooccurs;
 	}
 }
