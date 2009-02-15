@@ -1,0 +1,58 @@
+= Description of the WSD Algorithm =
+
+== Naive Bayes ==
+
+This algorithm uses the Naive Bayes machine learning algorithm to formulate a set of probabilities to determine the sense of a word. We are trying to find the sense s that maximizes:
+P(s | C)
+where s is a sense for the word and C is the context of the word. Of course, by Bayes' rule,
+P(s | C) = P(C | s) * P(s) / P(C)
+but P(C) is constant over all senses, since it does not depend on the sense, so to maximize we can disregard this term; all we care about are the relative amounts.
+P(C | s) * P(s)
+Since P(C | s) can be represented by (assuming the naive Bayes assumption of independence):
+Π(f in C)P(f | s)
+where C, the context, is composed of all the features in the context. So we have:
+Π(f in C)P(f | s) * P(s)
+We calculate:
+P(s) = C(s) / N
+P(f | s) = C(f, s) / C(s)
+where:
+C(s) is the number of occurrences of sense s in the training data
+C(f, s) is the number of occurrences of feature f in the context of sense s in the training data
+N is the total number of occurrences of the head word w
+In testing, to ensure there are no 0 probabilities, we assume that P(f | s) for a previously unseen feature is 1 / N.
+
+The output of learning will be a set of:
+P(s) = the "prior" probability of sense s for a given word
+P(c | s) = the probability of seeing a particular word in the context given that the sense is s
+
+== The algorithm ==
+
+Train:
+	Read in the training data & read in context for each word as instances
+	maintain count of:
+		C(f, s) : number of occurrences of feature f in the context of sense s
+		C(s) : number of occurrences of sense s
+		N : total number of occurrences of a head word
+	register probabilities P(c | s) and P(s) for each sense s and each context word for a given sense s
+		use the counts recorded above
+Test:
+	read in the test data & read in context for each word as instances
+	for each instance, evaluate the equation:
+		s* = argmax(s in set of senses for w) Π(f in C)P(f | s) * P(s)
+		output the sense s*
+
+== Why this approach ==
+
+There are several reasons this approach was chosen for our initial algorithm.  Easily implemented, Naive Bayes allows us to get a system up and running quickly, which can then be supplemented with other Machine Learning algorithms if necessary. Additionally, the WSD system that was most accurate in the Senseval-3 English Lexical Sample Task was based on Naive Bayes.
+
+Because Naive Bayes relies exclusively on the probability of features found in the training corpus, Naive Bayes may perform poorly when testing on different corpora.  However, for this project we know both training and testing data will be taken from the same corpus, and so this is less of a consideration.
+
+== Design choices ==
+
+To facilitate development, parts of the Word Sense Disambiguation software are compartmentalized into parsing, training, and testing. As such, multiple passes over the data are made, making for a system that is not as fast as it could be. However, the data is small enough that the whole system runs in less than a few seconds, so this is not a concern.
+
+= Software =
+
+The WSD system is implemented in Java. The output of the system is in the format required by the scorer program. The input is two files, a training XML file and a test XML file, both of which are very similar to the provided EnglishLS.train and EnglishLS.test files. Each file was surrounded with an <xml> tag to make it legal, parsable XML, and other small changes were made to make it parsable by the XML-parsing tools.
+
+The parsing part of the WSD system is implemented using the standard Java XML parsing libraries. The W3C Document Object Model classes are used to create parsable Documents. The standard javax parsing tools are also used.
