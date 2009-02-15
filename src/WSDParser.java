@@ -41,7 +41,7 @@ public class WSDParser {
 	}
 	
 	/**
-	 * convenience function, calls parseTarget multiple times
+	 * convenience function, calls parse multiple times
 	 * @param targets
 	 * @return
 	 */
@@ -102,20 +102,8 @@ public class WSDParser {
 		String[] post = parseTextNode(context.getLastChild());
 		//getting rid of non alphanumeric characters
 		int second = pre.length-1, third = 0;
-		while(!pre[second].matches("\\p{Alnum}+")){
-			second--;
-		}
 		int first = second - 1;
-		while(!pre[first].matches("\\p{Alnum}+")){
-			first--;
-		}
-		while(!post[third].matches("\\p{Alnum}+")){
-			third++;
-		}
 		int fourth = third + 1;
-		while(!post[fourth].matches("\\p{Alnum}+")){
-			fourth++;
-		}
 		String[] collocation = new String[]{ pre[first],
 				pre[second],
 				post[third],
@@ -123,12 +111,12 @@ public class WSDParser {
 		return collocation;
 	}
 	
-	/*TODO: this should also get rid of non alphanumeric words*/
-	public String[] parseTextNode(Node node){
+	private String[] parseTextNode(Node node){
 		String text = node.getNodeValue();
 		text = text.replaceAll("\\p{Punct}+", "");
 		text = text.trim().toLowerCase();
 		String[] textArray = text.split("\\s");
 		return textArray;
 	}
+	
 }
