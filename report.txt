@@ -56,3 +56,17 @@ To facilitate development, parts of the Word Sense Disambiguation software are c
 The WSD system is implemented in Java. The output of the system is in the format required by the scorer program. The input is two files, a training XML file and a test XML file, both of which are very similar to the provided EnglishLS.train and EnglishLS.test files. Each file was surrounded with an <xml> tag to make it legal, parsable XML, and other small changes were made to make it parsable by the XML-parsing tools.
 
 The parsing part of the WSD system is implemented using the standard Java XML parsing libraries. The W3C Document Object Model classes are used to create parsable Documents. The standard javax parsing tools are also used.
+
+= Results =
+
+== Using collocations with window size 4 ==
+
+Fine-grained score for "answers.collocation-4.txt" using key "answerKey.txt":
+ precision: 0.628 (240.00 correct of 382.00 attempted)
+ recall: 0.628 (240.00 correct of 382.00 in total)
+ attempted: 100.00 % (382.00 attempted of 382.00 in total)
+
+Coarse-grained score for "answers.collocation-4.txt" using key "answerKey.txt":
+ precision: 0.691 (264.00 correct of 382.00 attempted)
+ recall: 0.691 (264.00 correct of 382.00 in total)
+ attempted: 100.00 % (382.00 attempted of 382.00 in total)
