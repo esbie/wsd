@@ -18,6 +18,9 @@ public class NaiveBayes
     public HashMap<String, Double> probSense;
     public HashMap<String, Double> defaultProbGivenSense;
     
+    public boolean USE_COLLOCATION = true;
+    public boolean USE_COOCCURRENCE = true;
+    
     public NaiveBayes(ArrayList<Instance> instances)
     {
         countForFeatureForSense = new HashMap<Feature, HashMap<String, Integer>>();
@@ -37,9 +40,32 @@ public class NaiveBayes
     {
         for (Instance instance : instances) {
             // Update countForFeatureForSense
-            for (int i = 0; i < 4; i++) {
-                if (!instance.collocation[i].equals("")) {
-                    Feature feature = new Feature(instance.collocation[i], i-2);
+            if (USE_COLLOCATION) {
+                for (int i = 0; i < 4; i++) {
+                    if (!instance.collocation[i].equals("")) {
+                        Feature feature = new Feature(instance.collocation[i], i-2);
+                        if (countForFeatureForSense.containsKey(feature)) {
+                            HashMap<String, Integer> senseMap = countForFeatureForSense.get(feature);
+                            for (String senseid : instance.senseids) {
+                                if (senseMap.containsKey(senseid)) {
+                                    senseMap.put(senseid, senseMap.get(senseid)+1);
+                                } else {
+                                    senseMap.put(senseid, 1);
+                                }
+                            }
+                        } else {
+                            HashMap<String, Integer> senseMap = new HashMap<String, Integer>();
+                            for (String senseid : instance.senseids) {
+                                senseMap.put(senseid, 1);
+                            }
+                            countForFeatureForSense.put(feature, senseMap);
+                        }
+                    }
+                }
+            }
+            if (USE_COOCCURRENCE) {
+                for (String cooccur : instance.word_set) {
+                    Feature feature = new Feature(cooccur);
                     if (countForFeatureForSense.containsKey(feature)) {
                         HashMap<String, Integer> senseMap = countForFeatureForSense.get(feature);
                         for (String senseid : instance.senseids) {

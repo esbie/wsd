@@ -3,6 +3,12 @@ class Feature
     public String word;
     public Integer offset;
     
+    public Feature(String word)
+    {
+        this.word = word;
+        this.offset = 3;
+    }
+    
     public Feature(String word, Integer offset)
     {
         this.word = word;
@@ -27,6 +33,9 @@ class Feature
     
     public String toString()
     {
+        if (offset > 2) {
+            return word;
+        }
         return word + "_" + offset.toString();
     }
 }

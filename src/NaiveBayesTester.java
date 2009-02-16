@@ -20,8 +20,15 @@ public class NaiveBayesTester
             for (String sense : trainer.headwordSenseMap.get(instance.headword())) {
                 Double curProb = 1.0;
                 curProb *= trainer.probability(sense);
-                for (int i = 0; i < 4; i++) {
-                    curProb *= trainer.probability(new Feature(instance.collocation[i], i-2), sense);
+                if (trainer.USE_COLLOCATION) {
+                    for (int i = 0; i < 4; i++) {
+                        curProb *= trainer.probability(new Feature(instance.collocation[i], i-2), sense);
+                    }
+                }
+                if (trainer.USE_COOCCURRENCE) {
+                    for (String cooccur : instance.word_set) {
+                        curProb *= trainer.probability(new Feature(cooccur), sense);
+                    }
                 }
                 if (curProb > bestProb) {
                     bestProb = curProb;
