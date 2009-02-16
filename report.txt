@@ -1,4 +1,6 @@
-== The algorithm ==
+= Description of the WSD Algorithm =
+
+== Naive Bayes ==
 
 This algorithm uses the Naive Bayes machine learning algorithm to formulate a set of probabilities to determine the sense of a word. We are trying to find the sense s that maximizes:
 P(s | C)
@@ -23,6 +25,8 @@ The output of learning will be a set of:
 P(s) = the "prior" probability of sense s for a given word
 P(c | s) = the probability of seeing a particular word in the context given that the sense is s
 
+== The algorithm ==
+
 Train:
 	Read in the training data & read in context for each word as instances
 	maintain count of:
@@ -45,4 +49,10 @@ Because Naive Bayes relies exclusively on the probability of features found in t
 
 == Design choices ==
 
-A context C will consist of collocation features of words, for simplicity. Context consisting of only collocation information is not optimal, but it may be good enough to achieve acceptable disambiguation results.
+To facilitate development, parts of the Word Sense Disambiguation software are compartmentalized into parsing, training, and testing. As such, multiple passes over the data are made, making for a system that is not as fast as it could be. However, the data is small enough that the whole system runs in less than a few seconds, so this is not a concern.
+
+= Software =
+
+The WSD system is implemented in Java. The output of the system is in the format required by the scorer program. The input is two files, a training XML file and a test XML file, both of which are very similar to the provided EnglishLS.train and EnglishLS.test files. Each file was surrounded with an <xml> tag to make it legal, parsable XML, and other small changes were made to make it parsable by the XML-parsing tools.
+
+The parsing part of the WSD system is implemented using the standard Java XML parsing libraries. The W3C Document Object Model classes are used to create parsable Documents. The standard javax parsing tools are also used.

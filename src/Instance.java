@@ -35,4 +35,8 @@ public class Instance {
 	    this.instance_id = instance_id;
 	    this.word_set = word_set;
 	}
+	
+	public String headword(){
+	    return lexelt.substring(0, lexelt.length()-2);
+	}
 }
