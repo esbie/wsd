@@ -10,7 +10,10 @@ public class test {
 		Instance i = x.get(4);
 		System.out.println("|" + i.collocation[0] + "|" + i.collocation[1] + 
 				"|" + i.target + "|" + i.collocation[2] + "|" + i.collocation[3] + "|");
-		//System.out.println(i.cooccurs.toString());
-		//System.out.println(parser.cooccurs.toString());
+		for(int j=0; j<i.cooccurrence.length; j++){
+			System.out.print((i.cooccurrence[j]?"1":"0")+",");
+		}
+		System.out.println();
+		System.out.println(parser.cooccurs.toString());
 	}
 }

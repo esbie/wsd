@@ -55,13 +55,27 @@ public class WSDParser {
 	private void parseLexelt(String target, Element lexelt){
 		//TODO cooccurence vectors
 		cooccurs = new HashSet<String>();
+		ArrayList<Instance> targetExamples = new ArrayList<Instance>();
 		NodeList instances = lexelt.getElementsByTagName("instance");
 		for(int i=0; i<instances.getLength(); i++){
 			Element instance = (Element) instances.item(i);
-			examples.add(parseInstance(target, instance));
+			targetExamples.add(parseInstance(target, instance));
 		}
+		createFeatureVectors(targetExamples);
+		examples.addAll(targetExamples);		
 	}
 	
+	private void createFeatureVectors(ArrayList<Instance> targetExamples) {
+		String[] word_array = cooccurs.toArray(new String[cooccurs.size()]);
+		for(int j=0; j<targetExamples.size(); j++){
+			Instance instance = targetExamples.get(j);
+			instance.cooccurrence = new boolean[word_array.length];
+			for(int i=0; i<word_array.length; i++){
+				instance.cooccurrence[i] = instance.word_set.contains(word_array[i]);
+			}
+		}
+	}
+
 	private Instance parseInstance(String target, Element instance){
 		Element context = (Element) instance.getElementsByTagName("context").item(0);
 		String id = instance.getAttribute("id");
@@ -70,7 +84,8 @@ public class WSDParser {
 				parseAnswers(instance), 
 				parseCollocation(context),
 				target+".n",
-				id);
+				id,
+				parseCooccurrence(context));
 	}
 	
 	private String parseTarget(Element context){
@@ -88,7 +103,7 @@ public class WSDParser {
 		return senseids;
 	}
 	
-	private HashSet<String> parseCooccurence(Element context){
+	private HashSet<String> parseCooccurrence(Element context){
 		HashSet<String> inContext = new HashSet<String>(); 
 		String[] pre = parseTextNode(context.getFirstChild());
 		String[] post = parseTextNode(context.getLastChild());
