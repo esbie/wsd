@@ -7,7 +7,6 @@ public class WSDParser {
 	
 	public Element rootElement;
 	public ArrayList<Instance> examples = new ArrayList<Instance>();
-	public HashSet<String> cooccurs;
 
 	public WSDParser(String filename){
 		//initializing the xml parser
@@ -53,27 +52,13 @@ public class WSDParser {
 	}
 	
 	private void parseLexelt(String target, Element lexelt){
-		//TODO cooccurence vectors
-		cooccurs = new HashSet<String>();
 		ArrayList<Instance> targetExamples = new ArrayList<Instance>();
 		NodeList instances = lexelt.getElementsByTagName("instance");
 		for(int i=0; i<instances.getLength(); i++){
 			Element instance = (Element) instances.item(i);
 			targetExamples.add(parseInstance(target, instance));
 		}
-		createFeatureVectors(targetExamples);
 		examples.addAll(targetExamples);		
-	}
-	
-	private void createFeatureVectors(ArrayList<Instance> targetExamples) {
-		String[] word_array = cooccurs.toArray(new String[cooccurs.size()]);
-		for(int j=0; j<targetExamples.size(); j++){
-			Instance instance = targetExamples.get(j);
-			instance.cooccurrence = new boolean[word_array.length];
-			for(int i=0; i<word_array.length; i++){
-				instance.cooccurrence[i] = instance.word_set.contains(word_array[i]);
-			}
-		}
 	}
 
 	private Instance parseInstance(String target, Element instance){
@@ -90,7 +75,7 @@ public class WSDParser {
 	
 	private String parseTarget(Element context){
 		Element head = (Element) context.getChildNodes().item(1);
-		return head.getTextContent();
+		return head.getTextContent().toLowerCase();
 	}
 	
 	private String[] parseAnswers(Element instance){
@@ -103,33 +88,28 @@ public class WSDParser {
 		return senseids;
 	}
 	
-	private HashSet<String> parseCooccurrence(Element context){
-		HashSet<String> inContext = new HashSet<String>(); 
+	private ArrayList<String> parseCooccurrence(Element context){
+		ArrayList<String> inContext = new ArrayList<String>(); 
 		String[] pre = parseTextNode(context.getFirstChild());
 		String[] post = parseTextNode(context.getLastChild());
 		inContext.addAll(Arrays.asList(pre));
 		inContext.addAll(Arrays.asList(post));
-		cooccurs.addAll(inContext);		
 		return inContext;
 	}
 	
 	private String[] parseCollocation(Element context){
 		String[] pre = parseTextNode(context.getFirstChild());
 		String[] post = parseTextNode(context.getLastChild());
-		//getting rid of non alphanumeric characters
-		int second = pre.length-1, third = 0;
-		int first = second - 1;
-		int fourth = third + 1;
-		String[] collocation = new String[]{ pre[first],
-				pre[second],
-				post[third],
-				post[fourth]};
+		String[] collocation = new String[]{ pre[pre.length-2],
+				pre[pre.length-1],
+				post[0],
+				post[1]};
 		return collocation;
 	}
 	
 	private String[] parseTextNode(Node node){
 		String text = node.getNodeValue();
-		text = text.replaceAll("\\p{Punct}+", "");
+		text = text.replaceAll("\\s+\\p{Punct}+\\s", "");
 		text = text.trim().toLowerCase();
 		String[] textArray = text.split("\\s");
 		return textArray;
