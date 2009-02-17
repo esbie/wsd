@@ -19,7 +19,7 @@ public class NaiveBayes
     public HashMap<String, Double> defaultProbGivenSense;
     
     public boolean USE_COLLOCATION = true;
-    public boolean USE_COOCCURRENCE = true;
+    public boolean USE_COOCCURRENCE = false;
     
     public NaiveBayes(ArrayList<Instance> instances)
     {
@@ -43,7 +43,7 @@ public class NaiveBayes
             if (USE_COLLOCATION) {
                 for (int i = 0; i < instance.collocation.length; i++) {
                     if (!instance.collocation[i].equals("")) {
-                        Feature feature = new Feature(instance.collocation[i], i-2);
+                        Feature feature = new Feature(instance.collocation[i], i);
                         if (countForFeatureForSense.containsKey(feature)) {
                             HashMap<String, Integer> senseMap = countForFeatureForSense.get(feature);
                             for (String senseid : instance.senseids) {

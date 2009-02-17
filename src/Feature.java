@@ -6,7 +6,7 @@ class Feature
     public Feature(String word)
     {
         this.word = word;
-        this.offset = 3;
+        this.offset = -1;
     }
     
     public Feature(String word, Integer offset)

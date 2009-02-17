@@ -22,7 +22,7 @@ public class NaiveBayesTester
                 curProb *= trainer.probability(sense);
                 if (trainer.USE_COLLOCATION) {
                     for (int i = 0; i < instance.collocation.length; i++) {
-                        curProb *= trainer.probability(new Feature(instance.collocation[i], i-2), sense);
+                        curProb *= trainer.probability(new Feature(instance.collocation[i], i), sense);
                     }
                 }
                 if (trainer.USE_COOCCURRENCE) {
