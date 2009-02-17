@@ -41,7 +41,7 @@ public class NaiveBayes
         for (Instance instance : instances) {
             // Update countForFeatureForSense
             if (USE_COLLOCATION) {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < instance.collocation.length; i++) {
                     if (!instance.collocation[i].equals("")) {
                         Feature feature = new Feature(instance.collocation[i], i-2);
                         if (countForFeatureForSense.containsKey(feature)) {

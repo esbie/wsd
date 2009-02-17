@@ -21,7 +21,7 @@ public class NaiveBayesTester
                 Double curProb = 1.0;
                 curProb *= trainer.probability(sense);
                 if (trainer.USE_COLLOCATION) {
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < instance.collocation.length; i++) {
                         curProb *= trainer.probability(new Feature(instance.collocation[i], i-2), sense);
                     }
                 }

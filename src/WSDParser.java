@@ -100,10 +100,15 @@ public class WSDParser {
 	private String[] parseCollocation(Element context){
 		String[] pre = parseTextNode(context.getFirstChild());
 		String[] post = parseTextNode(context.getLastChild());
-		String[] collocation = new String[]{ pre[pre.length-2],
+		String[] collocation = new String[]{ 
+				pre[pre.length-4],
+				pre[pre.length-3],
+				pre[pre.length-2],
 				pre[pre.length-1],
 				post[0],
-				post[1]};
+				post[1],
+				post[2],
+				post[3]};
 		return collocation;
 	}
 	
