@@ -13,7 +13,9 @@ public class NaiveBayesTester
     
     public void test()
     {
+        System.out.println("Testing with Naive Bayes");
         for (Instance instance : instances) {
+            System.out.print("Testing instance " + instance.instance_id + "...");
             String senseAnswer = "";
             Double bestProb = 0.0;
             
@@ -35,6 +37,7 @@ public class NaiveBayesTester
                     senseAnswer = sense;
                 }
             }
+            System.out.println("Best probability: " + bestProb + " sense " + senseAnswer);
             
             System.out.println(instance.lexelt + " " + instance.instance_id + " " + senseAnswer);
         }

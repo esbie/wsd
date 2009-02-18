@@ -11,10 +11,12 @@ public class WSDParser {
 	public WSDParser(String filename){
 		//initializing the xml parser
 		try{
+		    System.out.print("Building parser document...");
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(filename);
 			rootElement = doc.getDocumentElement();
+			System.out.println("Document built.");
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -29,6 +31,7 @@ public class WSDParser {
 	public ArrayList<Instance> parse(String target){
 		//here we assume that we are parsing only nouns
 		//and that there is only 1 lexelt per target
+		System.out.println("Parsing for target word " + target);
 		NodeList lexelts = rootElement.getElementsByTagName("lexelt");
 		for(int i = 0; i<lexelts.getLength(); i++){
 			Element lexelt = (Element) lexelts.item(i);
@@ -62,6 +65,7 @@ public class WSDParser {
 	}
 
 	private Instance parseInstance(String target, Element instance){
+	    System.out.println("Parsing Instance...");
 		Element context = (Element) instance.getElementsByTagName("context").item(0);
 		String id = instance.getAttribute("id");
 		return new Instance(
@@ -74,11 +78,13 @@ public class WSDParser {
 	}
 	
 	private String parseTarget(Element context){
+	    System.out.println("\tparsing target...");
 		Element head = (Element) context.getChildNodes().item(1);
 		return head.getTextContent().toLowerCase();
 	}
 	
 	private String[] parseAnswers(Element instance){
+	    System.out.println("\tparsing sense answers...");
 		NodeList answers = instance.getElementsByTagName("answer");
 		String[] senseids = new String[answers.getLength()];
 		for(int i=0; i<senseids.length; i++){
@@ -89,6 +95,7 @@ public class WSDParser {
 	}
 	
 	private ArrayList<String> parseCooccurrence(Element context){
+	    System.out.println("\tparsing co-occurrence...");
 		ArrayList<String> inContext = new ArrayList<String>(); 
 		String[] pre = parseTextNode(context.getFirstChild());
 		String[] post = parseTextNode(context.getLastChild());
@@ -98,6 +105,7 @@ public class WSDParser {
 	}
 	
 	private String[] parseCollocation(Element context){
+	    System.out.println("\tparsing collocation...");
 		String[] pre = parseTextNode(context.getFirstChild());
 		String[] post = parseTextNode(context.getLastChild());
 		String[] collocation = new String[]{ pre[pre.length-2],

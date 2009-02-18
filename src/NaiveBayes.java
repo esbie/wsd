@@ -38,9 +38,12 @@ public class NaiveBayes
     
     public void train()
     {
+        System.out.println("Training Naive Bayes");
         for (Instance instance : instances) {
+            System.out.print("Training on Instance " + instance.instance_id + "...");
             // Update countForFeatureForSense
             if (USE_COLLOCATION) {
+                System.out.print("Collocation features...");
                 for (int i = 0; i < 4; i++) {
                     if (!instance.collocation[i].equals("")) {
                         Feature feature = new Feature(instance.collocation[i], i-2);
@@ -64,6 +67,7 @@ public class NaiveBayes
                 }
             }
             if (USE_COOCCURRENCE) {
+                System.out.print("Co-occurrence features...");
                 for (String cooccur : instance.word_set) {
                     Feature feature = new Feature(cooccur);
                     if (countForFeatureForSense.containsKey(feature)) {
@@ -85,6 +89,7 @@ public class NaiveBayes
                 }
             }
             
+            System.out.println("Updating other counts");
             // Update countForSense
             for (String senseid : instance.senseids) {
                 if (countForSense.containsKey(senseid)) {
@@ -118,6 +123,7 @@ public class NaiveBayes
     
     private void formulateProbabilites()
     {
+        System.out.println("Calculating probabilities...");
         for (Feature feature : countForFeatureForSense.keySet()) {
             HashMap<String, Integer> senseMap = countForFeatureForSense.get(feature);
             for (String sense : senseMap.keySet()) {
