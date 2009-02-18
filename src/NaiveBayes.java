@@ -19,7 +19,7 @@ public class NaiveBayes
     public HashMap<String, Double> defaultProbGivenSense;
     
     public boolean USE_COLLOCATION = true;
-    public boolean USE_COOCCURRENCE = false;
+    public boolean USE_COOCCURRENCE = true;
     
     public NaiveBayes(ArrayList<Instance> instances)
     {
